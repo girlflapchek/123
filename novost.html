@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма добавления новости</title>
+    <style>
+        /* Стили для формы */
+        .news-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .news-form input[type="text"],
+        .news-form textarea,
+        .news-form input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Важно для правильной ширины */
+        }
+
+        .news-form textarea {
+            height: 150px;
+        }
+
+        .news-form input[type="submit"] {
+            background-color: #4CAF50; /* Зеленый цвет */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .news-form input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <h2>Выложить новость</h2>
+    <form class="news-form" action="#" method="post" enctype="multipart/form-data">
+        <label for="newsTitle">Название новости:</label>
+        <input type="text" id="newsTitle" name="newsTitle" required>
+
+        <label for="newsText">Текст новости:</label>
+        <textarea id="newsText" name="newsText" required></textarea>
+
+        <label for="newsImage">Аватарка новости:</label>
+        <input type="file" id="newsImage" name="newsImage" accept="image/*" required>
+
+        <input type="submit" value="Подать на обработку">
+    </form>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новостной сайт</title>
+    <style>
+        /* Общие стили (остаются без изменений) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Стили для логотипа в меню */
+        .logo-menu {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #000; /* Черный цвет */
+            font-weight: bold;
+            font-size: 0.9em; /* Меньший размер шрифта */
+        }
+
+        /* Стили для кнопки "Выложить новость" */
+        .upload-news-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4CAF50; /* Зеленый цвет */
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* Плавное изменение цвета */
+        }
+
+        .upload-news-button:hover {
+            background-color: #3e8e41; /* Более темный зеленый цвет при наведении */
+            cursor: pointer; /* Изменяем курсор на руку */
+        }
+
+        /* Стили для всплывающего окна */
+        .modal {
+            display: none; /* Скрываем окно по умолчанию */
+            position: fixed; /* Фиксированное положение */
+            z-index: 1; /* Поверх всего */
+            left: 0;
+            top: 0;
+            width: 100%; /* На всю ширину */
+            height: 100%; /* На всю высоту */
+            overflow: auto; /* Прокрутка, если контент не помещается */
+            background-color: rgba(0, 0, 0, 0.4); /* Полупрозрачный фон */
+        }
+
+        /* Стили для содержимого всплывающего окна */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* Центрируем по вертикали и горизонтали */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Ширина содержимого */
+            max-width: 600px; /* Максимальная ширина */
+        }
+
+        /* Стили для кнопки закрытия */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+
+        main {
+            display: flex;
+            padding: 20px;
+            flex: 1;
+        }
+
+        /* Стили для главной новости */
+        .main-news {
+            width: 40%;
+            margin-right: 20px;
+        }
+
+        .main-news-image {
+            width: 100%;
+            height: 200px;
+            background-color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для центрального блока */
+        .central-block {
+            width: 20%;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 auto 10px;
+        }
+
+        /* Стили для популярных новостей */
+        .popular-news {
+            width: 40%;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .news-item img {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            margin-right: 10px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Стили для строки поиска */
+        .search-bar input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white; /* Явное указание белого фона */
+            color: black; /* Явное указание черного цвета текста */
+            /* Дополнительные стили, чтобы убрать возможные артефакты */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: none; /* Убираем фоновое изображение, если оно есть */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="search-bar">
+        <input type="text" placeholder="Поиск...">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/sport">Спорт</a></li>
+            <li><a href="/cryptocurrency">Криптовалюта</a></li>
+            <li><a href="/world">Мировые новости</a></li>
+            <li><a href="/economy">Экономика</a></li>
+            <li><a href="#" class="upload-news-button" id="uploadNewsBtn">+</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="main-news">
+        <h2>Главное за сутки</h2>
+        <div class="main-news-image">
+            <img src="placeholder-image.jpg" alt="Главная новость">
+        </div>
+        <p>Текст главной новости...</p>
+    </section>
+
+    <section class="central-block">
+        <div class="logo">
+
+        </div>
+        <div class="date">
+            <p>31 марта 2025 г.</p>
+            <p>Понедельник 11:30 по мск</p>
+        </div>
+    </section>
+
+    <section class="popular-news">
+        <h2>Популярные новости</h2>
+        <ul>
+            <li>
+                <div class="news-item">
+                    <img src="placeholder-thumbnail.jpg" alt="Превью новости">
+                    <p>Заголовок популярной новости 1...</p>
+                </div>
+            </li>
+            <li>
+                <div class="news-item">
+					<img src="placeholder-thumbnail.jpg" alt="Превью новости">
+                    <p>Заголовок популярной новости 2...</p>
+                </div>
+            </li>
+            <li>
+                <div class="news-item">
+                    <img src="placeholder-thumbnail.jpg" alt="Превью новости">
+                    <p>Заголовок популярной новости 3...</p>
+                </div>
+            </li>
+        </ul>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Мой новостной сайт</p>
+</footer>
+
+<script>
+    // Функции для работы с API
+    async function register(email, password) {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+        
+        return await response.json();
+    }
+
+    async function login(email, password) {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        });
+        
+        return await response.json();
+    }
+
+    async function logout() {
+        const response = await fetch('/api/logout', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        return await response.json();
+    }
+
+    async function getUser() {
+        const response = await fetch('/api/user', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        return await response.json();
+    }
+
+    async function submitArticle(title, content, category) {
+        const response = await fetch('/api/articles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title, content, category }),
+            credentials: 'include'
+        });
+        
+        return await response.json();
+    }
+
+    // Проверка аутентификации при загрузке страницы
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const user = await getUser();
+            updateUI(user);
+        } catch (err) {
+            console.log('Пользователь не авторизован');
+        }
+    });
+
+    function updateUI(user) {
+        const authSection = document.getElementById('auth-section');
+        const userSection = document.getElementById('user-section');
+        
+        if (user && !user.message) {
+            authSection.style.display = 'none';
+            userSection.style.display = 'block';
+            document.getElementById('user-email').textContent = user.email;
+            
+            if (user.role === 'admin') {
+                document.getElementById('admin-link').style.display = 'block';
+            }
+        } else {
+            authSection.style.display = 'block';
+            userSection.style.display = 'none';
+        }
+    }
+
+    // Обработчики форм
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        
+        try {
+            const result = await register(email, password);
+            alert(result.message);
+            if (result.message === 'Пользователь зарегистрирован') {
+                const loginResult = await login(email, password);
+                updateUI(loginResult.user);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        
+        try {
+            const result = await login(email, password);
+            updateUI(result.user);
+        } catch (err) {
+            console.error(err);
+            alert('Ошибка входа');
+        }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        try {
+            await logout();
+            updateUI(null);
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    // Модальное окно для статьи
+    const modal = document.getElementById("uploadNewsModal");
+    const btn = document.getElementById("uploadNewsBtn");
+    const span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+        loadArticleForm();
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function loadArticleForm() {
+        document.getElementById('newsFormContainer').innerHTML = `
+            <h2>Добавить новость</h2>
+            <form id="article-form">
+                <div>
+                    <label for="title">Заголовок:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div>
+                    <label for="content">Содержание:</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <div>
+                    <label for="category">Категория:</label>
+                    <select id="category" name="category" required>
+                        <option value="sport">Спорт</option>
+                        <option value="cryptocurrency">Криптовалюта</option>
+                        <option value="world">Мировые новости</option>
+                        <option value="economy">Экономика</option>
+                    </select>
+                </div>
+                <button type="submit">Отправить на модерацию</button>
+            </form>
+        `;
+
+        document.getElementById('article-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = e.target.title.value;
+            const content = e.target.content.value;
+            const category = e.target.category.value;
+            
+            try {
+                const user = await getUser();
+                if (user.message) throw new Error('Не авторизован');
+                
+                const result = await submitArticle(title, content, category);
+                alert('Статья отправлена на модерацию');
+                modal.style.display = "none";
+            } catch (err) {
+                console.error(err);
+                alert('Ошибка при отправке статьи');
+            }
+        });
+    }
+</script>
+
+<div id="auth-section" style="display: none;">
+    <form id="register-form">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <button type="submit">Регистрация</button>
+    </form>
+    <form id="login-form">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <button type="submit">Вход</button>
+    </form>
+</div>
+
+<div id="user-section" style="display: none;">
+    <span id="user-email"></span>
+    <button id="logout-btn">Выход</button>
+    <a href="/admin" id="admin-link" style="display: none;">Админ-панель</a>
+</div>
+
+<!-- Всплывающее окно (Modal) -->
+<div id="uploadNewsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="newsFormContainer">
+            <!-- Содержимое формы будет загружено сюда -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Получаем элементы
+    var modal = document.getElementById("uploadNewsModal");
+    var btn = document.getElementById("uploadNewsBtn");
+    var span = document.getElementsByClassName("close")[0];
+    var newsFormContainer = document.getElementById("newsFormContainer");
+
+    // Функция для загрузки содержимого novost.html
+    function loadNewsForm() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "novost.html", true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                newsFormContainer.innerHTML = xhr.responseText;
+            } else {
+                newsFormContainer.innerHTML = "<p>Ошибка загрузки формы.</p>";
+            }
+        };
+        xhr.onerror = function() {
+            newsFormContainer.innerHTML = "<p>Ошибка сети при загрузке формы.</p>";
+        };
+        xhr.send();
+    }
+
+    // Когда пользователь кликает на кнопку, открываем модальное окно и загружаем форму
+    btn.onclick = function() {
+        modal.style.display = "block";
+        loadNewsForm(); // Загружаем форму при открытии модального окна
+    }
+
+    // Когда пользователь кликает на <span> (x), закрываем модальное окно
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Когда пользователь кликает вне модального окна, закрываем его
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
